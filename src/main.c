@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 
-void generate_id(int num, char* id);
 void add_client();
 void view_client_list();
 void search_client();
 void remove_client();
 
 struct Client {
-    char client_id[10];
+    int client_id;
     char first_name[32];
     char last_name[32];
     int age;
@@ -44,18 +42,41 @@ int main() {
                 getchar();
                 system("clear");
                 break;
+            case 3:
+                system("clear");
+                search_client();
+                printf("Press any key to exit\n");
+                getchar();
+                system("clear");
+                break;
+            case 4:
+                system("clear");
+                remove_client();
+                printf("Press any key to exit\n");
+                getchar();
+                system("clear");
+                break;
+            case 5:
+                printf("Thank you for used the Client Database Software!\n");
+                exit(0);
+                break;
+            default:
+                system("clear");
+                getchar();
+                printf(
+                    "Enter a valid command\n\n"
+                    "Press any key to continue\n");
+                getchar();
+                system("clear");
+                break;
+
         }
     }
     return 0;
 }
 
-void generate_id(int num, char* id) {
-    sprintf(id, "%X", num);
-}
-
 void add_client() {
     char another;
-    char client_id[10];
     FILE *fp;
     struct Client info;
     srand(time(NULL));
@@ -65,9 +86,8 @@ void add_client() {
         printf("ADD NEW CLIENT INFO\n\n");
         fp = fopen("client_info", "a");
 
-        int client_num = rand();
-        generate_id(client_num, client_id);
-        strcpy(info.client_id, client_id);
+        int client_id = rand() % 100000 + 1;
+        info.client_id = client_id;
         printf("Enter first name: ");
         scanf("%s", info.first_name);
         printf("Enter last name: ");
@@ -82,9 +102,9 @@ void add_client() {
         scanf("%s", info.email);
 
         if (fp == NULL) {
-            fprintf(stderr, "Can't open file\n");
+            fprintf(stderr, "Can't open file\n\n");
         }else{
-            printf("Client saved successfully!\n");
+            printf("Client saved successfully!\n\n");
         }
 
         fwrite(&info, sizeof(struct Client), 1, fp);
@@ -100,13 +120,13 @@ void view_client_list() {
     FILE *fp;
     struct Client info;
     fp = fopen("client_info", "r");
-    printf("VIEW CLIENT LIST\n\n");
     if (fp == NULL) {
-        fprintf(stderr, "Can't open file\n");
+        fprintf(stderr, "Can't open file\n\n");
     }
+    printf("VIEW CLIENT LIST\n\n");
 
     while (fread(&info, sizeof(struct Client), 1, fp)) {
-        printf("Client ID: %s\n", info.client_id);
+        printf("Client ID: %d\n", info.client_id);
         printf("Name: %s %s\n", info.first_name, info.last_name);
         printf("Age: %d\n", info.age);
         printf("Adress: %s\n", info.address);
@@ -115,4 +135,72 @@ void view_client_list() {
     }
     fclose(fp);
     getchar();
+}
+
+void search_client() {
+    FILE *fp;
+    struct Client info;
+    int client_id, found = 0;
+    fp = fopen("client_info", "r");
+    if (fp == NULL) {
+        fprintf(stderr, "Can't open file\n\n");
+    }
+    printf("SEARCH CLIENT\n\n");
+    printf("Enter Client ID: ");
+    scanf("%d", &client_id);
+    printf("\n");
+
+    while (fread(&info, sizeof(struct Client), 1, fp)) {
+        if (info.client_id == client_id) {
+            found = 1;
+            printf("Client ID: %d\n", info.client_id);
+            printf("Name: %s %s\n", info.first_name, info.last_name);
+            printf("Age: %d\n", info.age);
+            printf("Adress: %s\n", info.address);
+            printf("Phone Number: %s\n", info.phone_number);
+            printf("Email: %s\n\n", info.email);
+        }
+    }
+    if (!found) {
+        printf("Client not found\n\n");
+    }
+    fclose(fp);
+    getchar();
+
+}
+
+void remove_client() {
+    FILE *fp, *fprem;
+    struct Client info;
+    int client_id, found = 0;
+    printf("REMOVE CLIENT\n\n");
+    fp = fopen("client_info", "r");
+    fprem = fopen("removed_clients", "w");
+    if (fp == NULL) {
+        fprintf(stderr, "Can't open file\n\n");
+    }
+    printf("Enter Client ID: ");
+    scanf("%d", &client_id);
+    printf("\n");
+
+    while (fread(&info, sizeof(struct Client), 1, fp)) {
+        if (info.client_id == client_id) {
+            found = 1;
+        }else {
+            fwrite(&info, sizeof(struct Client), 1, fprem);
+        }
+    }
+    fclose(fp);
+    fclose(fprem);
+
+    if (found) {
+        remove("client_info");
+        rename("removed_clients", "client_info");
+        printf("Client removed successfully!\n\n");
+    }
+    if (!found) {
+        printf("Client not found\n\n");
+    }
+    getchar();
+    remove("removed_clients");
 }
