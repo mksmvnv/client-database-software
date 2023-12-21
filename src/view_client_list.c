@@ -1,5 +1,7 @@
 #include "view_client_list.h"
 
+#include "struct_client.h"
+
 void view_client_list() {
     FILE *fp;
     struct Client info;
@@ -13,7 +15,7 @@ void view_client_list() {
         printf("Client ID: %d\n", info.client_id);
         printf("Name: %s %s\n", info.first_name, info.last_name);
         printf("Age: %d\n", info.age);
-        printf("Adress: %s\n", info.address);
+        printf("Country: %s\n", info.country);
         printf("Phone Number: %s\n", info.phone_number);
         printf("Email: %s\n\n", info.email);
     }
