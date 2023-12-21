@@ -1,5 +1,7 @@
 #include "add_client.h"
 
+#include "struct_client.h"
+
 void add_client() {
     char another;
     FILE *fp;
@@ -19,8 +21,8 @@ void add_client() {
         scanf("%s", info.last_name);
         printf("Enter age: ");
         scanf("%d", &info.age);
-        printf("Enter address: ");
-        scanf("%s", info.address);
+        printf("Enter country: ");
+        scanf("%s", info.country);
         printf("Enter phone number: ");
         scanf("%s", info.phone_number);
         printf("Enter email: ");
@@ -28,7 +30,7 @@ void add_client() {
 
         if (fp == NULL) {
             fprintf(stderr, "Can't open file\n\n");
-        }else{
+        } else {
             printf("Client saved successfully!\n\n");
         }
 
@@ -38,5 +40,5 @@ void add_client() {
         printf("Do you want to add another client? (y/n): ");
         scanf("%s", &another);
 
-    }while (another == 'y' || another == 'Y');
+    } while (another == 'y' || another == 'Y');
 }
