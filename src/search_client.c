@@ -1,5 +1,7 @@
 #include "search_client.h"
 
+#include "struct_client.h"
+
 void search_client() {
     FILE *fp;
     struct Client info;
@@ -19,7 +21,7 @@ void search_client() {
             printf("Client ID: %d\n", info.client_id);
             printf("Name: %s %s\n", info.first_name, info.last_name);
             printf("Age: %d\n", info.age);
-            printf("Adress: %s\n", info.address);
+            printf("Country: %s\n", info.country);
             printf("Phone Number: %s\n", info.phone_number);
             printf("Email: %s\n\n", info.email);
         }
@@ -29,5 +31,4 @@ void search_client() {
     }
     fclose(fp);
     getchar();
-
 }
