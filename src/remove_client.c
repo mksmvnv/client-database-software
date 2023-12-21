@@ -1,5 +1,7 @@
 #include "remove_client.h"
 
+#include "struct_client.h"
+
 void remove_client() {
     FILE *fp, *fprem;
     struct Client info;
@@ -17,7 +19,7 @@ void remove_client() {
     while (fread(&info, sizeof(struct Client), 1, fp)) {
         if (info.client_id == client_id) {
             found = 1;
-        }else {
+        } else {
             fwrite(&info, sizeof(struct Client), 1, fprem);
         }
     }
